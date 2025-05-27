@@ -22,3 +22,5 @@ fig = px.pie(
 fig.update_traces(textinfo='label+value')
 
 st.plotly_chart(fig, use_container_width=True)
+
+//test
