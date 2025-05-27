@@ -3,7 +3,11 @@ import sqlite3
 import plotly.express as px
 import pandas as pd
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title="Datenbanken Hausarbeit",
+    page_icon="📊",  # Optional: Emoji oder Icon-URL
+    layout="wide",
+)
 
 st.title("Kamkinis der Piç!")
 st.write("Das ist meine erste Streamlit-A.")
