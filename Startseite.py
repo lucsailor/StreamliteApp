@@ -56,29 +56,8 @@ clicked_league = None
 
 for i, col in enumerate(cols):
     with col:
-        if league_names[i] == st.session_state.selected_league:
-            # 🎨 Aktiver Button – als HTML styled
-            st.markdown(
-                f"""
-                <div style='
-                    text-align: center;
-                    padding: 0.5rem 1rem;
-                    background-color: #0066cc;
-                    color: white;
-                    border-radius: 10px;
-                    font-weight: bold;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                '>
-                    {league_names[i]}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        else:
-            # ❎ Nicht aktive Liga – klickbarer Button
-            if st.button(league_names[i], key=f"league_{i}", use_container_width=True):
-                clicked_league = league_names[i]
-
+        if st.button(league_names[i], use_container_width=True):
+            clicked_league = league_names[i]
 
 # Nach der Schleife den Zustand aktualisieren (nur wenn geklickt)
 if clicked_league:
