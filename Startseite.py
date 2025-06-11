@@ -48,7 +48,6 @@ league_names = leagues_df['name'].tolist()
 if "selected_league" not in st.session_state:
     st.session_state.selected_league = leagues_df["name"].tolist()[0]  # z. B. "Serie A"
 
-league_names = leagues_df["name"].tolist()
 cols = st.columns(len(league_names))
 
 # Temporärer Speicher für Klick
@@ -65,7 +64,30 @@ if clicked_league:
 
 # Dann verwendest du diesen Wert:
 selected_league = st.session_state.selected_league
-st.subheader(f"{selected_league}")
+
+for i, col in enumerate(cols):
+    with col:
+        if league_names[i] == st.session_state.selected_league:
+            st.markdown(
+                f"""
+                <div style='
+                    position: relative;
+                    top: -3.65rem;
+                    padding: 0.6rem 0.5rem;
+                    background-color: #0066cc;
+                    color: white;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    text-align: center;
+                    z-index: 999;
+                    margin-bottom: -10.8rem;
+                '>{league_names[i]}</div>
+                """,
+                unsafe_allow_html=True
+            ) 
+
+
 
 # Lookup: ID zur gewählten Liga finden
 selected_league_id = leagues_df.loc[leagues_df["name"] == selected_league, "league_id"].values[0]
