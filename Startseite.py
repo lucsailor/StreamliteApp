@@ -122,3 +122,52 @@ df = df.set_index("Platz")
 
 # Daten anzeigen
 st.table(df)
+
+st.markdown("---")
+st.subheader("Letzte drei Spiele")
+
+# Die letzten drei Spiele der gewählten Liga abrufen
+query_last_matches = f"""
+    SELECT
+        leagues.name AS Liga,
+        leagues.icon_url AS LigaIcon,
+        home_team.name AS Heim,
+        home_team.cresturl AS HeimCrest,
+        away_team.name AS Auswaerts,
+        away_team.cresturl AS AuswaertsCrest,
+        scores.full_time_home AS HeimTore,
+        scores.full_time_away AS AuswaertsTore,
+        matches.utc_date AS Datum
+    FROM matches
+    JOIN teams AS home_team ON matches.home_team_id = home_team.team_id
+    JOIN teams AS away_team ON matches.away_team_id = away_team.team_id
+    JOIN scores ON matches.match_id = scores.match_id
+    JOIN leagues ON matches.league_id = leagues.league_id
+    WHERE matches.league_id = {selected_league_id}
+    ORDER BY datetime(matches.utc_date) DESC
+    LIMIT 3
+"""
+
+last_matches_df = pd.read_sql(query_last_matches, conn)
+
+# Schöne Anzeige der letzten drei Spiele
+for _, row in last_matches_df.iterrows():
+    st.markdown(
+        f"""
+        <div style='background-color:#f9f9f9; padding:1rem; border-radius:10px; margin-bottom:1rem;'>
+            <div style='display:flex; justify-content:center; align-items:center; font-weight:bold;'>
+                <div style='flex:1; text-align:right; margin-right:1rem;'>
+                    <img src='{row['HeimCrest']}' width='40'><br>{row['Heim']}
+                </div>
+                <div style='margin:0 1rem; font-size:1.5rem;'>{row['HeimTore']} : {row['AuswaertsTore']}</div>
+                <div style='flex:1; text-align:left; margin-left:1rem;'>
+                    <img src='{row['AuswaertsCrest']}' width='40'><br>{row['Auswaerts']}
+                </div>
+            </div>
+            <div style='text-align:center; font-size:0.9rem; margin-top:0.5rem;'>
+                <img src='{row['LigaIcon']}' width='25' style='vertical-align:middle;'> {row['Liga']} - {row['Datum']}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
