@@ -92,6 +92,12 @@ for i, col in enumerate(cols):
 # Lookup: ID zur gewählten Liga finden
 selected_league_id = leagues_df.loc[leagues_df["name"] == selected_league, "league_id"].values[0]
 
+# Informationen zur Liga (CL-, Europa- und Abstiegsränge)
+league_info = pd.read_sql(
+    f"SELECT cl_spot, uel_spot, relegation_spot FROM leagues WHERE league_id = {selected_league_id}",
+    conn,
+).iloc[0]
+
 # Tabelle laden 
 standings_df = pd.read_sql(f"""
     SELECT *
@@ -100,28 +106,61 @@ standings_df = pd.read_sql(f"""
     ORDER BY points DESC
 """, conn)
 
-# Teamnamen hinzufügen
-teams_df = pd.read_sql("SELECT team_id, name FROM teams", conn)
+# Teamnamen und Logos hinzufügen
+teams_df = pd.read_sql("SELECT team_id, name, cresturl FROM teams", conn)
 df = (
     standings_df
-    .rename(columns={
-        "position": "Platz",
-        "played_games": "Spiele",
-        "won": "Siege",
-        "draw": "Unentschieden",
-        "lost": "Niederlagen","points": "Punkte"
-        })
+    .rename(
+        columns={
+            "position": "Platz",
+            "played_games": "Spiele",
+            "won": "Siege",
+            "draw": "Unentschieden",
+            "lost": "Niederlagen",
+            "points": "Punkte",
+        }
+    )
     .merge(teams_df, on="team_id", how="left")
     .drop(columns=["team_id"])
     .rename(columns={"name": "Team"})
 )
 
+# Darstellung für Logos vorbereiten
+df["Team"] = df.apply(
+    lambda row: f"<img src='{row['cresturl']}' width='25' style='vertical-align:middle; margin-right:4px;'> {row['Team']}",
+    axis=1,
+)
+df = df.drop(columns=["cresturl"])
+
 # Spaltenreihenfolge definieren
 df = df[["Platz", "Team", "Spiele", "Siege", "Unentschieden", "Niederlagen", "Punkte"]]
-df = df.set_index("Platz")
+
+
+def highlight_row(row):
+    pos = row["Platz"]
+    if pos <= league_info.cl_spot:
+        return ["background-color:#e6ffe6"] * len(row)
+    elif pos <= league_info.uel_spot:
+        return ["background-color:#e6f0ff"] * len(row)
+    elif pos >= league_info.relegation_spot:
+        return ["background-color:#ffe6e6"] * len(row)
+    else:
+        return [""] * len(row)
+
+styled_df = (
+    df.set_index("Platz")
+    .style.apply(highlight_row, axis=1)
+    .set_table_styles(
+        [
+            {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
+            {"selector": "td", "props": "text-align:center;"},
+            {"selector": "table", "props": "width:100%; border-collapse:collapse;"},
+        ]
+    )
+)
 
 # Daten anzeigen
-st.table(df)
+st.markdown(styled_df.to_html(escape=False), unsafe_allow_html=True)
 
 st.markdown("---")
 st.subheader("Letzte drei Spiele")
