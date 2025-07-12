@@ -127,7 +127,11 @@ df = (
 
 # Darstellung für Logos vorbereiten
 df["Team"] = df.apply(
-    lambda row: f"<img src='{row['cresturl']}' width='25' style='vertical-align:middle; margin-right:4px;'> {row['Team']}",
+    lambda row: (
+        f"<div style='display:flex; align-items:center; justify-content:flex-start;'>"
+        f"<img src='{row['cresturl']}' width='25' style='margin-right:4px;'>"
+        f"<span>{row['Team']}</span></div>"
+    ),
     axis=1,
 )
 df = df.drop(columns=["cresturl"])
@@ -148,13 +152,13 @@ def highlight_row(row):
         return [""] * len(row)
 
 styled_df = (
-    df.set_index("Platz")
-    .style.apply(highlight_row, axis=1)
+    df.style.apply(highlight_row, axis=1)
+    .hide(axis="index")
     .set_table_styles(
         [
             {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
             {"selector": "td", "props": "text-align:center;"},
-            {"selector": "table", "props": "width:100%; border-collapse:collapse;"},
+            {"selector": "table", "props": "width:100%; margin-left:auto; margin-right:auto; border-collapse:collapse;"},
         ]
     )
 )
