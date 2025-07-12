@@ -126,14 +126,12 @@ df = (
 )
 
 # Darstellung für Logos vorbereiten
-df["Team"] = df.apply(
-    lambda row: f"<img src='{row['cresturl']}' width='25' style='vertical-align:middle; margin-right:4px;'> {row['Team']}",
-    axis=1,
-)
+df["Logo"] = df["cresturl"].apply(lambda url: f"<img src='{url}' width='25'>")
 df = df.drop(columns=["cresturl"])
 
 # Spaltenreihenfolge definieren
-df = df[["Platz", "Team", "Spiele", "Siege", "Unentschieden", "Niederlagen", "Punkte"]]
+df = df[["Platz", "Logo", "Team", "Spiele", "Siege", "Unentschieden", "Niederlagen", "Punkte"]]
+df = df.rename(columns={"Logo": ""})
 
 
 def highlight_row(row):
@@ -148,13 +146,13 @@ def highlight_row(row):
         return [""] * len(row)
 
 styled_df = (
-    df.set_index("Platz")
-    .style.apply(highlight_row, axis=1)
+    df.style.apply(highlight_row, axis=1)
+    .hide(axis="index")
     .set_table_styles(
         [
             {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
             {"selector": "td", "props": "text-align:center;"},
-            {"selector": "table", "props": "width:100%; border-collapse:collapse;"},
+            {"selector": "table", "props": "margin-left:auto; margin-right:auto; border-collapse:collapse;"},
         ]
     )
 )
