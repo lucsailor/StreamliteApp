@@ -132,6 +132,7 @@ df = df.drop(columns=["cresturl"])
 # Spaltenreihenfolge definieren
 df = df[["Platz", "Logo", "Team", "Spiele", "Siege", "Unentschieden", "Niederlagen", "Punkte"]]
 df = df.rename(columns={"Logo": ""})
+df = df.reset_index(drop=True)
 
 
 def highlight_row(row):
@@ -155,7 +156,9 @@ styled_df = (
         [
             {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
             {"selector": "td", "props": "text-align:center;"},
-            {"selector": "table", "props": "width:100%; margin-left:auto; margin-right:auto; border-collapse:collapse;"},
+            {"selector": "td:nth-child(2)", "props": "text-align:center; width:1%;"},
+            {"selector": "th:nth-child(2)", "props": "width:1%;"},
+            {"selector": "table", "props": "width:90%; margin-left:auto; margin-right:auto; border-collapse:collapse;"},
         ]
     )
 )
