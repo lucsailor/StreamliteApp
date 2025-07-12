@@ -164,7 +164,11 @@ styled_df = (
 )
 
 # Daten anzeigen
-st.markdown(styled_df.to_html(escape=False), unsafe_allow_html=True)
+table_html = styled_df.to_html(escape=False)
+st.markdown(
+    f"<div style='display:flex; justify-content:center'>{table_html}</div>",
+    unsafe_allow_html=True,
+)
 
 st.markdown("---")
 st.subheader("Letzte drei Spiele")
