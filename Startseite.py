@@ -126,7 +126,14 @@ df = (
 )
 
 # Darstellung für Logos vorbereiten
-df["Logo"] = df["cresturl"].apply(lambda url: f"<img src='{url}' width='25'>")
+df["Team"] = df.apply(
+    lambda row: (
+        f"<div style='display:flex; align-items:center; justify-content:flex-start;'>"
+        f"<img src='{row['cresturl']}' width='25' style='margin-right:4px;'>"
+        f"<span>{row['Team']}</span></div>"
+    ),
+    axis=1,
+)
 df = df.drop(columns=["cresturl"])
 
 # Spaltenreihenfolge definieren
@@ -155,7 +162,7 @@ styled_df = (
         [
             {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
             {"selector": "td", "props": "text-align:center;"},
-            {"selector": "table", "props": "margin-left:auto; margin-right:auto; border-collapse:collapse;"},
+            {"selector": "table", "props": "width:100%; margin-left:auto; margin-right:auto; border-collapse:collapse;"},
         ]
     )
 )
