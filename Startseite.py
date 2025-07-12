@@ -137,7 +137,10 @@ df = df[["Platz", "Team", "Spiele", "Siege", "Unentschieden", "Niederlagen", "Pu
 
 
 def highlight_row(row):
-    pos = row["Platz"]
+    # After setting the index to "Platz" the column is no longer
+    # available in the row data, so fall back to the row's index if
+    # necessary.
+    pos = row["Platz"] if "Platz" in row else row.name
     if pos <= league_info.cl_spot:
         return ["background-color:#e6ffe6"] * len(row)
     elif pos <= league_info.uel_spot:
