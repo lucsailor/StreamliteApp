@@ -126,7 +126,10 @@ df = (
 )
 
 # Darstellung für Logos vorbereiten
-df["Logo"] = df["cresturl"].apply(lambda url: f"<img src='{url}' width='25'>")
+# Die Bildgröße wird per CSS festgelegt, um ein Überlappen der Spalte zu vermeiden
+df["Logo"] = df["cresturl"].apply(
+    lambda url: f"<img src='{url}' style='width:25px; height:25px; object-fit:contain;'>"
+)
 df = df.drop(columns=["cresturl"])
 
 # Spaltenreihenfolge definieren
@@ -156,19 +159,16 @@ styled_df = (
         [
             {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
             {"selector": "td", "props": "text-align:center;"},
-            {"selector": "td:nth-child(2)", "props": "text-align:center; width:10%;"},
-            {"selector": "th:nth-child(2)", "props": "width:1%;"},
-            {"selector": "table", "props": "width:90%; margin-left:auto; margin-right:auto; border-collapse:collapse;"},
+            {"selector": "td:nth-child(2)", "props": "text-align:center; width:40px;"},
+            {"selector": "th:nth-child(2)", "props": "width:40px;"},
+            {"selector": "table", "props": "width:100%; margin-left:0; margin-right:0; border-collapse:collapse;"},
         ]
     )
 )
 
 # Daten anzeigen
 table_html = styled_df.to_html(escape=False)
-st.markdown(
-    f"<div style='display:flex; justify-content:center'>{table_html}</div>",
-    unsafe_allow_html=True,
-)
+st.markdown(table_html, unsafe_allow_html=True)
 
 st.markdown("---")
 st.subheader("Letzte drei Spiele")
