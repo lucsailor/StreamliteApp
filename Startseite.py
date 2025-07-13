@@ -159,8 +159,8 @@ styled_df = (
         [
             {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
             {"selector": "td", "props": "text-align:center;"},
-            {"selector": "td:nth-child(2)", "props": "text-align:center; width:40px;"},
-            {"selector": "th:nth-child(2)", "props": "width:40px;"},
+            {"selector": "td:nth-child(2)", "props": "text-align:center; width:1%;"},
+            {"selector": "th:nth-child(2)", "props": "width:5%;"},
             {"selector": "table", "props": "width:100%; margin-left:0; margin-right:0; border-collapse:collapse;"},
         ]
     )
