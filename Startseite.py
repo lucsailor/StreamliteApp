@@ -128,7 +128,7 @@ df = (
 # Darstellung für Logos vorbereiten
 # Die Bildgröße wird per CSS festgelegt, um ein Überlappen der Spalte zu vermeiden
 df["Logo"] = df["cresturl"].apply(
-    lambda url: f"<img src='{url}' style='width:25px; height:25px; object-fit:contain;'>"
+    lambda url: f"<img src='{url}' style='width:20%; height:20%; object-fit:contain;'>"
 )
 df = df.drop(columns=["cresturl"])
 
@@ -159,8 +159,7 @@ styled_df = (
         [
             {"selector": "th", "props": "text-align:center; background-color:#f0f0f0;"},
             {"selector": "td", "props": "text-align:center;"},
-            {"selector": "td:nth-child(2)", "props": "text-align:center; width:1%;"},
-            {"selector": "th:nth-child(2)", "props": "width:5%;"},
+
             {"selector": "table", "props": "width:100%; margin-left:0; margin-right:0; border-collapse:collapse;"},
         ]
     )
