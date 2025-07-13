@@ -10,6 +10,20 @@ st.set_page_config(
     layout="wide",
 )
 
+# Anpassung, damit die Tabelle die gesamte Seitenbreite einnimmt
+st.markdown(
+    """
+    <style>
+        .block-container {
+            padding-left: 0;
+            padding-right: 0;
+            max-width: 100% !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # Bild mit Text
 image = "https://ethianum-klinik-heidelberg.de/wp-content/uploads/2024/01/header-sportorthopaedie_fussball_2400x824px.webp",
 st.markdown(f"""
